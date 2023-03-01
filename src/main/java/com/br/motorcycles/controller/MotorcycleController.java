@@ -2,7 +2,6 @@ package com.br.motorcycles.controller;
 
 import com.br.motorcycles.dto.MotorcycleDTO;
 import com.br.motorcycles.entity.Motorcycle;
-import com.br.motorcycles.entity.User;
 import com.br.motorcycles.service.MotorcycleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,24 +18,21 @@ public class MotorcycleController {
     @Autowired
     private MotorcycleService motorcycleService;
 
+    @GetMapping
+    public ResponseEntity<List<MotorcycleDTO>> getAllMotorcycles() {
+        List<MotorcycleDTO> motorcycles = motorcycleService.getAllMotorcycles();
+        return ResponseEntity.ok(motorcycles);
+    }
+
     @GetMapping("/users/{userId}")
-    public ResponseEntity<List<Motorcycle>> getMotorcyclesByUserId(@PathVariable Long userId) {
-        List<Motorcycle> motorcycles = motorcycleService.getMotorcyclesByUserId(userId);
+    public ResponseEntity<List<MotorcycleDTO>> getMotorcyclesByUserId(@PathVariable String userId) {
+        List<MotorcycleDTO> motorcycles = motorcycleService.getMotorcyclesByUserId(userId);
         return ResponseEntity.ok(motorcycles);
     }
 
     @PostMapping
-    public ResponseEntity<Motorcycle> createMotorcycle(@RequestBody MotorcycleDTO motorcycleDTO) {
-        Motorcycle motorcycle = new Motorcycle();
-        motorcycle.setBrand(motorcycleDTO.getBrand());
-        motorcycle.setModel(motorcycleDTO.getModel());
-        motorcycle.setYear(motorcycleDTO.getYear());
-
-        User optionalUser = motorcycleService.getUserById(motorcycleDTO.getUserId());
-
-        motorcycle.setUser(optionalUser);
-
-        Motorcycle createdMotorcycle = motorcycleService.createMotorcycle(optionalUser.getId(), motorcycle);
+    public ResponseEntity<Motorcycle> createMotorcycle(@RequestBody Motorcycle motorcycle) {
+        Motorcycle createdMotorcycle = motorcycleService.createMotorcycle(motorcycle);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdMotorcycle);
     }
 

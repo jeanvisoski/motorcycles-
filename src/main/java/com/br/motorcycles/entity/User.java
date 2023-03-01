@@ -3,27 +3,41 @@ package com.br.motorcycles.entity;
 
 import jakarta.persistence.*;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Entity
 @Table(name = "users")
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @Column(name = "name")
-    private String name;
+    private String id;
 
     @Column(name = "email")
     private String email;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Motorcycle> motorcycles = new ArrayList<>();
+    @ManyToOne
+    @JoinColumn(name = "motorcycle_id")
+    private Motorcycle motorcycle;
 
-    public Long getId() {
+    public String getId() {
         return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public Motorcycle getMotorcycles() {
+        return motorcycle;
+    }
+
+    public void setMotorcycles(Motorcycle motorcycles) {
+        this.motorcycle = motorcycles;
     }
 }

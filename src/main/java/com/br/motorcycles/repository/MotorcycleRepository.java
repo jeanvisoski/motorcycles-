@@ -9,6 +9,6 @@ import java.util.List;
 
 @Repository
 public interface MotorcycleRepository extends JpaRepository<Motorcycle, Long> {
-    List<Motorcycle> findByUserId(Long userId);
+    List<Motorcycle> findById(String userId);
 }
 

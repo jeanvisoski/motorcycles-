@@ -1,18 +1,25 @@
 package com.br.motorcycles.dto;
 
+import jakarta.persistence.Column;
+
 public class MotorcycleDTO {
 
-    private Long userId;
+    private Long id;
+
     private String brand;
+
     private String model;
+
     private Integer year;
 
-    public Long getUserId() {
-        return userId;
+    private String imageUrl;
+
+    public Long getId() {
+        return id;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getBrand() {
@@ -38,5 +45,12 @@ public class MotorcycleDTO {
     public void setYear(Integer year) {
         this.year = year;
     }
-}
 
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+}

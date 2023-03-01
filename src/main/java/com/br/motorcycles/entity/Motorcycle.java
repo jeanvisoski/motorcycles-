@@ -1,7 +1,9 @@
 package com.br.motorcycles.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "motorcycles")
@@ -10,10 +12,6 @@ public class Motorcycle {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
 
     @Column(name = "brand")
     private String brand;
@@ -24,20 +22,18 @@ public class Motorcycle {
     @Column(name = "year")
     private Integer year;
 
+    @Column(name = "image_url")
+    private String imageUrl;
+
+    @OneToMany(mappedBy = "motorcycle", cascade = CascadeType.ALL)
+    private List<User> users = new ArrayList<>();
+
     public Long getId() {
         return id;
     }
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
     }
 
     public String getBrand() {
@@ -62,5 +58,21 @@ public class Motorcycle {
 
     public void setYear(Integer year) {
         this.year = year;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    public List<User> getUsers() {
+        return users;
+    }
+
+    public void setUsers(List<User> users) {
+        this.users = users;
     }
 }

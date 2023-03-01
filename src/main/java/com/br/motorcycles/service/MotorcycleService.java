@@ -1,15 +1,19 @@
 package com.br.motorcycles.service;
 
+import com.br.motorcycles.dto.MotorcycleDTO;
 import com.br.motorcycles.entity.Motorcycle;
 import com.br.motorcycles.entity.User;
-import com.br.motorcycles.exception.UserNotFoundException;
 import com.br.motorcycles.repository.MotorcycleRepository;
 import com.br.motorcycles.repository.UserRepository;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class MotorcycleService {
@@ -20,29 +24,44 @@ public class MotorcycleService {
     @Autowired
     private UserRepository userRepository;
 
-    public List<Motorcycle> getMotorcyclesByUserId(Long userId) {
-        return motorcycleRepository.findByUserId(userId);
+    public List<MotorcycleDTO> getAllMotorcycles() {
+        List<Motorcycle> motorcycles = motorcycleRepository.findAll();
+
+        List<MotorcycleDTO> motorcycleDTO = new ArrayList<>();
+
+        for (Motorcycle motorcycle : motorcycles) {
+            MotorcycleDTO dto = new MotorcycleDTO();
+            dto.setId(motorcycle.getId());
+            dto.setBrand(motorcycle.getBrand());
+            dto.setModel(motorcycle.getModel());
+            dto.setYear(motorcycle.getYear());
+            motorcycleDTO.add(dto);
+        }
+
+        return motorcycleDTO;
     }
 
-    public User getUserById(Long id) {
-        Optional<User> optionalUser = userRepository.findById(id);
+    public List<MotorcycleDTO> getMotorcyclesByUserId(String userId) {
+        List<Motorcycle> motorcycles = userRepository.findById(userId).map(User::getMotorcycles).stream().collect(Collectors.toList());
 
-        if (optionalUser.isPresent()) {
-            return optionalUser.get();
-        } else {
-            throw new UserNotFoundException("User not found with id: " + id);
+        List<MotorcycleDTO> motorcycleDTO = new ArrayList<>();
+
+        for (Motorcycle motorcycle : motorcycles) {
+            MotorcycleDTO dto = new MotorcycleDTO();
+            dto.setId(motorcycle.getId());
+            dto.setBrand(motorcycle.getBrand());
+            dto.setModel(motorcycle.getModel());
+            dto.setYear(motorcycle.getYear());
+            dto.setImageUrl(motorcycle.getImageUrl());
+            motorcycleDTO.add(dto);
         }
+
+        return motorcycleDTO;
     }
 
-    public Motorcycle createMotorcycle(Long userId, Motorcycle motorcycle) {
-        Optional<User> optionalUser = userRepository.findById(userId);
-        if (optionalUser.isPresent()) {
-            User user = optionalUser.get();
-            motorcycle.setUser(user);
-            return motorcycleRepository.save(motorcycle);
-        } else {
-            throw new UserNotFoundException("User with id " + userId + " not found.");
-        }
+
+    public Motorcycle createMotorcycle(Motorcycle motorcycle) {
+        return motorcycleRepository.save(motorcycle);
     }
 
     public Optional<Motorcycle> getMotorcycleById(Long id) {
